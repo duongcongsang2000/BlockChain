@@ -40,7 +40,7 @@ describe('TransactionPool', () => {
         wallet = new Wallet();
         transaction = wallet.createTransaction('r4nd-4dr355', 30, bc, tp);
         if (i%2==0) {
-          transaction.input.amount = 99999;
+          transaction.input.temperature = 99999;
         } else {
           validTransactions.push(transaction);
         }

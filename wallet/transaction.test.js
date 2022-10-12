@@ -3,27 +3,27 @@ const Wallet = require('./index');
 const { MINING_REWARD } = require('../config');
 
 describe('Transaction', () => {
-  let transaction, wallet, recipient, amount;
+  let transaction, wallet, recipient, temperature;
 
   beforeEach(() => {
     wallet = new Wallet();
-    amount = 50;
+    temperature = 50;
     recipient = 'r3c1p13nt';
-    transaction = Transaction.newTransaction(wallet, recipient, amount);
+    transaction = Transaction.newTransaction(wallet, recipient, temperature);
   });
 
-  it('outputs the `amount` subtracted from the wallet balance', () => {
-    expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
-      .toEqual(wallet.balance - amount);
+  it('outputs the `temperature` subtracted from the wallet balance', () => {
+    expect(transaction.outputs.find(output => output.address === wallet.publicKey).temperature)
+      .toEqual(wallet.balance - temperature);
   });
 
-  it('outputs the `amount` added to the recipient', () => {
-    expect(transaction.outputs.find(output => output.address === recipient).amount)
-      .toEqual(amount);
+  it('outputs the `temperature` added to the recipient', () => {
+    expect(transaction.outputs.find(output => output.address === recipient).temperature)
+      .toEqual(temperature);
   });
 
   it('inputs the balance of the wallet', () => {
-    expect(transaction.input.amount).toEqual(wallet.balance);
+    expect(transaction.input.temperature).toEqual(wallet.balance);
   });
 
   it('validates a valid transaction', () => {
@@ -31,14 +31,14 @@ describe('Transaction', () => {
   });
 
   it('invalidates a corrupt transaction', () => {
-    transaction.outputs[0].amount = 50000;
+    transaction.outputs[0].temperature = 50000;
     expect(Transaction.verifyTransaction(transaction)).toBe(false);
   });
 
-  describe('transacting with an amount that exceeds the balance', () => {
+  describe('transacting with an temperature that exceeds the balance', () => {
     beforeEach(() => {
-      amount = 50000;
-      transaction = Transaction.newTransaction(wallet, recipient, amount);
+      temperature = 50000;
+      transaction = Transaction.newTransaction(wallet, recipient, temperature);
     });
 
     it('does not create the transaction', () => {
@@ -55,13 +55,13 @@ describe('Transaction', () => {
       transaction = transaction.update(wallet, nextRecipient, nextAmount);
     });
 
-    it(`subtracts the next amount from the sender's output`, () => {
-      expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
-        .toEqual(wallet.balance - amount - nextAmount);
+    it(`subtracts the next temperature from the sender's output`, () => {
+      expect(transaction.outputs.find(output => output.address === wallet.publicKey).temperature)
+        .toEqual(wallet.balance - temperature - nextAmount);
     });
 
-    it('outputs an amount for the next recipient', () => {
-      expect(transaction.outputs.find(output => output.address === nextRecipient).amount)
+    it('outputs an temperature for the next recipient', () => {
+      expect(transaction.outputs.find(output => output.address === nextRecipient).temperature)
         .toEqual(nextAmount);
     });
   });
@@ -72,7 +72,7 @@ describe('Transaction', () => {
     });
 
     it(`reward the miner's wallet`, () => {
-      expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount)
+      expect(transaction.outputs.find(output => output.address === wallet.publicKey).temperature)
         .toEqual(MINING_REWARD);
     });
   });
