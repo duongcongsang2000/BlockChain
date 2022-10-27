@@ -8,12 +8,12 @@ class Transaction {
     this.outputs = [];
   }
 
-  update(senderWallet, recipient, temperature) {
+  update(senderWallet, recipient, cpu, ram, disk) {
 
-    this.outputs.push({ temperature, address: recipient });
+    this.outputs.push({ cpu, ram, disk, address: recipient });
     Transaction.signTransaction(this, senderWallet);
     return this;
-    
+
   }
 
   static transactionWithOutputs(senderWallet, outputs) {
@@ -23,9 +23,9 @@ class Transaction {
     return transaction;
   }
 
-  static newTransaction(senderWallet, recipient, temperature) {
+  static newTransaction(senderWallet, recipient, cpu, ram, disk) {
     return Transaction.transactionWithOutputs(senderWallet, [
-      { temperature, address: recipient }
+      { cpu, ram, disk, address: recipient }
     ]);
   }
 

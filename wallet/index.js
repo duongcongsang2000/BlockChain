@@ -17,14 +17,15 @@ class Wallet {
     return this.keyPair.sign(dataHash);
   }
 
-  createTransaction(recipient, temperature, blockchain, transactionPool) {
+  createTransaction(recipient, cpu,ram,disk,blockchain, transactionPool) {
 
     let transaction = transactionPool.existingTransaction(this.publicKey);
 
-    if (transaction) {
-      transaction.update(this, recipient, temperature);
-    } else {
-      transaction = Transaction.newTransaction(this, recipient, temperature);
+    // if (transaction) {
+    //   transaction.update(this, recipient, cpu, ram, disk);
+    // } else 
+    {
+      transaction = Transaction.newTransaction(this, recipient, cpu, ram, disk);
       transactionPool.updateOrAddTransaction(transaction);
     }
 

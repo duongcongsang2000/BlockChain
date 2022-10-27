@@ -27,13 +27,13 @@ describe('Wallet', () => {
       });
 
       it('doubles the `sendAmount` subtracted from the wallet balance', () => {
-        expect(transaction.outputs.find(output => output.address === wallet.publicKey).temperature)
+        expect(transaction.outputs.find(output => output.address === wallet.publicKey).cpu)
           .toEqual(wallet.balance - sendAmount * 2);
       });
 
       it('clones the `sendAmount` output for the recipient', () => {
         expect(transaction.outputs.filter(output => output.address === recipient)
-          .map(output => output.temperature)).toEqual([sendAmount, sendAmount]);
+          .map(output => output.cpu)).toEqual([sendAmount, sendAmount]);
       });
     });
   });

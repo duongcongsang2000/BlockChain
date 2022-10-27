@@ -1,20 +1,55 @@
-### Build a Blockchain and Cryptocurrency from Scratch
+## Khởi tạo
+```
+$ git clone https://github.com/duongcongsang2000/SangKillerAPI
+$ npm install
 
-The official code for the *Build a Blockchain and Cryptocurrency from Scratch* course on Udemy by David Katz.
+Thay đổi đường dẫn mongoose.connect('mongodb://localhost:27017/express-demo') trong file index.js thành địa chỉ mongo của VPS, tạo sẵn database trong VPS rồi thay tên express-demo thành DB mới tạo
+$ npm run dev
+```
+## Xem Tất cả dữ liệu
+```
+Get method:  https://ipVps/data/readAll
+response:      Toàn bộ dữ liệu trong DB
+```
 
-Check out the course: [https://www.udemy.com/build-blockchain](https://www.udemy.com/build-blockchain)
+## Xóa dữ liệu
+```
+Post method:  https://ipVps/data/delete
+request:     truyền vào id vd: 
+{
+    "id": "6342dd42f1f7720725f80be1"
+}
+Response: Trả về status
+```
 
-The blockchain is a revolutionary technology that allows for the secure, distributed, decentralized storage of information. Over the past few years, the blockchain has taken the engineering landscape by storm. Many people in the industry predict that the blockchain will disrupt the ways we interact with technology on the same way the Internet did in the early 2000s.
+## Thêm dữ liệu
+```
+Post method:  https://ipVps/data/write
+request:     Định dạng json vd: 
+{
+    "TIME": "TIME"
+    "CPU": "CPU",
+    "RAM": "RAM",
+    "SSD": "SSD"
+}
+Response: Trả về dữ liệu vừa insert + status
+```
 
-Some of the main course highlights:
-- Build a Blockchain in the object-oriented programming style.
-- Generate hashes for blocks in the chain.
-- Unit Test Components of the Blockchain.
-- Create an API around the Blockchain.
-- Create a real-time connected peer-to-peer server.
-- Implement a proof-of-work algorithm.
-- Sign Transactions with cryptography and digital signature.
-- Create a Transaction Pool for a real-time list of incoming data.
-- Include transactions in core blocks of the chain.
+## Đọc dữ liệu theo id
+```
+Get method:  https://ipVps/data/read?id=6342dd42f1f7720725f80be1
 
-Ultimately, knowledge of the Blockchain will set you up for success in the future, as an engineer in a blockchain-dominated world.
+Response: Trả về dữ liệu theo id
+```
+
+## Sửa dữ liệu theo id
+```
+Post method:  https://ipVps/data/edit
+request:     Định dạng json vd: 
+{
+    "id": "6342dd42f1f7720725f80be1",
+    "newData": {"SSD": "ssd xịn"}
+  
+}
+Response: nếu có có thay đổi thì trả về status: Modify Success + dữ liệu mới, dữ liệu ko thay đổi thì status: no data change, sai trường thì status: Field not correct
+```
