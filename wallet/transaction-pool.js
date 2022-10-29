@@ -14,12 +14,11 @@ class TransactionPool {
       this.transactions.push(transaction);
     }
   }
-
   existingTransaction(address) {
     return this.transactions.find(t => t.input.address === address);
   }
-
   validTransactions() {
+    console.log('Valid signature');
     return this.transactions.filter(transaction => {
       if (!Transaction.verifyTransaction(transaction)) {
         console.log(`Invalid signature from ${transaction.input.address}.`);

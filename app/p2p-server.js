@@ -23,6 +23,7 @@ class P2pServer {
       console.log(`Listening for peer-to-peer connections on: ${P2P_PORT}`);
     } catch (error) {
       server.off('ECONNRESET');
+      
     }
      
     

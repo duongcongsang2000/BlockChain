@@ -21,9 +21,9 @@ class Wallet {
 
     let transaction = transactionPool.existingTransaction(this.publicKey);
 
-    // if (transaction) {
-    //   transaction.update(this, recipient, cpu, ram, disk);
-    // } else 
+    if (transaction) {
+      transaction.update(this, recipient, cpu, ram, disk);
+    } else 
     {
       transaction = Transaction.newTransaction(this, recipient, cpu, ram, disk);
       transactionPool.updateOrAddTransaction(transaction);

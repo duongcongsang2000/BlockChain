@@ -48,7 +48,7 @@ app.post('/transact', (req, res) => {
 
 app.get('/mine-transactions', (req, res) => {
   const block = miner.mine();
-  console.log(`New block added: ${block.toString()}`);
+  // console.log(`New block added: ${block.toString()}`);
   res.redirect('/blocks');
 });
 
@@ -74,7 +74,8 @@ function checkNewTrans() {
     let temp = tp.transactions;
     if (temp[0].input.address !== wallet.publicKey) {
       const block = miner.mine();
-      console.log(`New block added: ${block.toString()}`);
+      // console.log(`New block added: ${block.toString()}`);
+    console.log('New block added ');
     }
   }
 }
@@ -87,13 +88,14 @@ function sendInfo() {
     ram: 40,
     disk: 50
   }
+  
   const { recipient, cpu, ram, disk } = tran
   const transaction = wallet.createTransaction(recipient, cpu ,ram ,disk, bc, tp)
   p2pServer.broadcastTransaction(transaction);
 }
 
 setInterval(checkNewTrans, 3000);
-setInterval(sendInfo, 4000);
+setInterval(sendInfo, 10000);
 
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));

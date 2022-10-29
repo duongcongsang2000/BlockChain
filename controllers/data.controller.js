@@ -7,6 +7,7 @@ module.exports.readAll = async function(req, res) {
 
 module.exports.write = async function(req, res) {
 	const data = req.body
+    console.log(` Data : ${data}`);
     const result = await Data.collection.insertOne(data)
     if (result.acknowledged == true) {
         console.log('insert success');
@@ -19,6 +20,7 @@ module.exports.write = async function(req, res) {
         res.json(result)
     }
 };
+
 
 module.exports.delete = async function(req, res) {
 	const id = req.body.id
