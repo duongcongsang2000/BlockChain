@@ -21,6 +21,10 @@ module.exports.write = async function(req, res) {
     }
 };
 
+module.exports.readInfor = async function(req, res) {
+	var Datas = res.body 
+	res.json(Datas)
+};
 
 module.exports.delete = async function(req, res) {
 	const id = req.body.id

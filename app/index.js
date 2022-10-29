@@ -15,10 +15,13 @@ const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
 const app = express();
 const bc = new Blockchain();
-const wallet = new Wallet();``
+const wallet = new Wallet(); ``
 const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
+const Data = require('../models/data.model.js')
+const { NODE } = require('../config')
+const axios = require('axios');
 
 app.use(bodyParser.json());
 
@@ -41,7 +44,7 @@ app.get('/transactions', (req, res) => {
 
 app.post('/transact', (req, res) => {
   const { recipient, cpu, ram, disk } = req.body;
-  const transaction = wallet.createTransaction(recipient, cpu ,ram ,disk, bc, tp);
+  const transaction = wallet.createTransaction(recipient, cpu, ram, disk, bc, tp);
   p2pServer.broadcastTransaction(transaction);
   res.redirect('/transactions');
 });
@@ -56,6 +59,23 @@ app.get('/public-key', (req, res) => {
   res.json({ publicKey: wallet.publicKey });
 });
 
+
+app.post('/info/add', (req, res) => {
+
+  
+
+  // const data = req.body
+  // let datas = new Data(req.body)
+  // let date_ob = new Date()
+  // datas.TIME = date_ob
+  // console.log(` Data : ${req.body}`);
+  // console.log(` Data : ${req.body['CPU']}`);
+  // // console.log()
+  // // console.log(` Data : ${data}`);
+  // // console.log(`${data[0]}`)
+  // sendInfo(datas)
+  // res.json({ datas })
+})
 // app.get('/start', (req, res) => {
 //   const publicKey = wallet.publicKey;
 //   let tran = {
@@ -75,26 +95,37 @@ function checkNewTrans() {
     if (temp[0].input.address !== wallet.publicKey) {
       const block = miner.mine();
       // console.log(`New block added: ${block.toString()}`);
-    console.log('New block added ');
+      console.log('New block added ');
     }
   }
 }
 
 function sendInfo() {
-  const publicKey = wallet.publicKey;
-  let tran = {
-    recipient: publicKey,
-    cpu: 30,
-    ram: 40,
-    disk: 50
-  }
-  
-  const { recipient, cpu, ram, disk } = tran
-  const transaction = wallet.createTransaction(recipient, cpu ,ram ,disk, bc, tp)
-  p2pServer.broadcastTransaction(transaction);
+
+  let url = `${NODE}/info/get`
+  axios.get(url)
+    .then(response => {
+      data = response.data
+      console.log(response.data);
+      const publicKey = wallet.publicKey;
+      let tran = {
+        recipient: publicKey,
+        cpu: data.CPU,
+        ram: data.RAM,
+        disk: data.SSD
+      }
+    
+      const { recipient, cpu, ram, disk } = tran
+      const transaction = wallet.createTransaction(recipient, cpu, ram, disk, bc, tp)
+      p2pServer.broadcastTransaction(transaction);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+    
 }
 
-setInterval(checkNewTrans, 3000);
+setInterval(checkNewTrans, 2000);
 setInterval(sendInfo, 10000);
 
 
@@ -104,10 +135,10 @@ p2pServer.listen();
 
 
 app.use(express.json()) // for parsing application/json
-  // app.use(mongoSanitize());
+// app.use(mongoSanitize());
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cors());
-app.use('/data', dataRoute);  
-app.listen(HTTP_PORT1, function() {
-console.log('server listening on port ' + HTTP_PORT1);
+app.use('/data', dataRoute);
+app.listen(HTTP_PORT1, function () {
+  console.log('server listening on port ' + HTTP_PORT1);
 });

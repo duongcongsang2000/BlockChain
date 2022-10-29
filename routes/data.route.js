@@ -8,4 +8,5 @@ router.post('/delete', controller.delete)
 router.post('/edit', controller.edit)
 router.get('/read', controller.read)
 router.get('/readAll', controller.readAll)
+router.get('/readInfor', controller.readInfor)
 module.exports = router;
