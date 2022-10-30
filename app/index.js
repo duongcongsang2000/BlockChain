@@ -22,6 +22,7 @@ const miner = new Miner(bc, tp, wallet, p2pServer);
 const Data = require('../models/data.model.js')
 const { NODE } = require('../config')
 const axios = require('axios');
+const { response } = require('express');
 
 app.use(bodyParser.json());
 
@@ -120,7 +121,8 @@ function sendInfo() {
       p2pServer.broadcastTransaction(transaction);
     })
     .catch(error => {
-      console.log(error);
+      // console.log(error);
+
     });
     
 }

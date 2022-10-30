@@ -5,7 +5,7 @@ var dataSchema = new mongoose.Schema({
 	TIME: String,
 	CPU: String,
 	RAM: String,
-	HDD: String,
+	SSD: String,
 });
 
 
