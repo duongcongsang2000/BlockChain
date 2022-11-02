@@ -5,12 +5,6 @@ const P2pServer = require('./p2p-server');
 const Wallet = require('../wallet');
 const TransactionPool = require('../wallet/transaction-pool');
 const Miner = require('./miner');
-
-var dataRoute = require('../routes/data.route');
-var mongoose = require('mongoose')
-const cors = require('cors');
-mongoose.connect('mongodb://localhost:27017/express-demo')
-const HTTP_PORT1 = process.env.HTTP_PORT1 || 5555;
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 
 const app = express();
@@ -19,10 +13,9 @@ const wallet = new Wallet(); ``
 const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
-const Data = require('../models/data.model.js')
 const { NODE } = require('../config')
 const axios = require('axios');
-const { response } = require('express');
+const {response} = require('express');
 
 app.use(bodyParser.json());
 
@@ -129,18 +122,5 @@ function sendInfo() {
 
 setInterval(checkNewTrans, 2000);
 setInterval(sendInfo, 10000);
-
-
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));
 p2pServer.listen();
-
-
-
-app.use(express.json()) // for parsing application/json
-// app.use(mongoSanitize());
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
-app.use(cors());
-app.use('/data', dataRoute);
-app.listen(HTTP_PORT1, function () {
-  console.log('server listening on port ' + HTTP_PORT1);
-});
