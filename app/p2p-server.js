@@ -21,9 +21,11 @@ class P2pServer {
       server.on('connection', socket => this.connectSocket(socket));
       this.connectToPeers();
       console.log(`Listening for peer-to-peer connections on: ${P2P_PORT}`);
-    } catch (error) {
-      server.off('ECONNRESET');
-      
+    } catch  {
+      // server.off('ECONNRESET');
+      console.log("Reconnect !!")
+      setTimeout(this.connectToPeers(), 5000);
+      console.log(`Listening for peer-to-peer connections on: ${P2P_PORT}`);
     }
      
     
@@ -37,12 +39,17 @@ class P2pServer {
   }
 
   connectSocket(socket) {
-    this.sockets.push(socket);
-    console.log('Socket connected');
-
-    this.messageHandler(socket);
-
-    this.sendChain(socket);
+    try {
+      this.sockets.push(socket);
+      console.log('Socket connected');
+  
+      this.messageHandler(socket);
+  
+      this.sendChain(socket);
+      
+    } catch (error) {
+      console.log("connectSocket error:", error)
+    }
   }
 
   messageHandler(socket) {

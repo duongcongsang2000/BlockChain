@@ -6,7 +6,7 @@ const Wallet = require('../wallet');
 const TransactionPool = require('../wallet/transaction-pool');
 const Miner = require('./miner');
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
-
+var public_key = "";
 const app = express();
 const bc = new Blockchain();
 const wallet = new Wallet(); ``
@@ -14,8 +14,9 @@ const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
 const { NODE } = require('../config')
+const { NODE2 } = require('../config')
 const axios = require('axios');
-const {response} = require('express');
+const { response } = require('express');
 
 app.use(bodyParser.json());
 
@@ -56,7 +57,7 @@ app.get('/public-key', (req, res) => {
 
 app.post('/info/add', (req, res) => {
 
-  
+
 
   // const data = req.body
   // let datas = new Data(req.body)
@@ -83,12 +84,26 @@ app.post('/info/add', (req, res) => {
 
 // });
 
+function checkpublickey() {
+  let url1 = `${NODE2}/public-key`
+  axios.get(url1)
+    .then(response => {
+      data = response.data;
+      // console.log(data);
+      public_key = data.publicKey;
+      // console.log(public_key)
+    })
+    .catch(error => {
+      // console.log(error);
+    });
+}
+
 function checkNewTrans() {
   if (tp.transactions.length !== 0) {
     let temp = tp.transactions;
     if (temp[0].input.address !== wallet.publicKey) {
-      const block = miner.mine();
-      // console.log(`New block added: ${block.toString()}`);
+      miner.mine();
+      console.log(`New block added: ${block.toString()}`);
       console.log('New block added ');
     }
   }
@@ -100,27 +115,33 @@ function sendInfo() {
   axios.get(url)
     .then(response => {
       data = response.data
-      console.log(response.data);
-      const publicKey = wallet.publicKey;
+      // console.log(response.data);
+      // public_key=this.checkpublickey();
+      console.log(public_key);
       let tran = {
-        recipient: publicKey,
+        recipient: public_key,
         cpu: data.CPU,
         ram: data.RAM,
         disk: data.SSD
       }
-    
+
       const { recipient, cpu, ram, disk } = tran
       const transaction = wallet.createTransaction(recipient, cpu, ram, disk, bc, tp)
       p2pServer.broadcastTransaction(transaction);
     })
     .catch(error => {
-      // console.log(error);
+      console.log(error);
 
     });
-    
-}
 
+}
+checkpublickey();
 setInterval(checkNewTrans, 2000);
 setInterval(sendInfo, 10000);
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));
-p2pServer.listen();
+try {
+  p2pServer.listen();
+
+} catch (error) {
+  console.log("Listen:", + error)
+}
