@@ -14,7 +14,6 @@ const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
 const { NODE } = require('../config')
-const { NODE2 } = require('../config')
 const axios = require('axios');
 const { response } = require('express');
 
@@ -85,7 +84,7 @@ app.post('/info/add', (req, res) => {
 // });
 
 function checkpublickey() {
-  let url1 = `${NODE2}/public-key`
+  let url1 = `${NODE}/public-key`
   axios.get(url1)
     .then(response => {
       data = response.data;
@@ -103,7 +102,7 @@ function checkNewTrans() {
     let temp = tp.transactions;
     if (temp[0].input.address !== wallet.publicKey) {
       miner.mine();
-      console.log(`New block added: ${block.toString()}`);
+      // console.log(`New block added: ${block.toString()}`);
       console.log('New block added ');
     }
   }
@@ -117,7 +116,7 @@ function sendInfo() {
       data = response.data
       // console.log(response.data);
       // public_key=this.checkpublickey();
-      console.log(public_key);
+      // console.log(public_key);
       let tran = {
         recipient: public_key,
         cpu: data.CPU,

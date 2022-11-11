@@ -2,7 +2,6 @@ const DIFFICULTY = 3;
 const MINE_RATE = 3000;
 const INITIAL_BALANCE = 500;
 const MINING_REWARD = 50;
-const NODE = "http://127.0.0.1:3000"
-const NODE2= "http://127.0.0.1:3001"
+const NODE = "http://localhost:3001"
 
-module.exports = { DIFFICULTY, MINE_RATE, INITIAL_BALANCE, MINING_REWARD, NODE, NODE2};
+module.exports = { DIFFICULTY, MINE_RATE, INITIAL_BALANCE, MINING_REWARD, NODE};

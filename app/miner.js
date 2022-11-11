@@ -11,7 +11,7 @@ class Miner {
 
   mine() {
     const validTransactions = this.transactionPool.validTransactions();
-    // console.log(validTransactions);
+    console.log(validTransactions);
     const block = this.blockchain.addBlock(validTransactions);
     this.p2pServer.syncChains();
     this.transactionPool.clear();

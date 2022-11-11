@@ -16,6 +16,7 @@ class P2pServer {
   }
 
   listen() {
+    process.on("uncaughtException", err => console.log(err));
     const server = new Websocket.Server({ port: P2P_PORT });
     try {
       server.on('connection', socket => this.connectSocket(socket));
@@ -32,10 +33,17 @@ class P2pServer {
   }
 
   connectToPeers() {
-    peers.forEach(peer => {
-      const socket = new Websocket(peer);
-      socket.on('open', () => this.connectSocket(socket));
+    try {
+      peers.forEach(peer => {
+        const socket = new Websocket(peer);
+        socket.on('open', () => this.connectSocket(socket));
+      });
+    } catch (error) {
+      socket.on("close", () => {
+          this.listen();
     });
+    }
+    
   }
 
   connectSocket(socket) {
