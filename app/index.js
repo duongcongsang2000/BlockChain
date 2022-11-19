@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('../blockchain');
-const P2pServer = require('./p2p-server');
+const P2pServer = require('./p2p-server2');
+// const P2pServer2 = require('./p2p-server2');
 const Wallet = require('../wallet');
 const TransactionPool = require('../wallet/transaction-pool');
 const Miner = require('./miner');
@@ -14,6 +15,7 @@ const tp = new TransactionPool();
 const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
 const { NODE } = require('../config')
+const { NODE2 } = require('../config')
 const axios = require('axios');
 const { response } = require('express');
 
@@ -53,38 +55,8 @@ app.get('/public-key', (req, res) => {
   res.json({ publicKey: wallet.publicKey });
 });
 
-
-app.post('/info/add', (req, res) => {
-
-
-
-  // const data = req.body
-  // let datas = new Data(req.body)
-  // let date_ob = new Date()
-  // datas.TIME = date_ob
-  // console.log(` Data : ${req.body}`);
-  // console.log(` Data : ${req.body['CPU']}`);
-  // // console.log()
-  // // console.log(` Data : ${data}`);
-  // // console.log(`${data[0]}`)
-  // sendInfo(datas)
-  // res.json({ datas })
-})
-// app.get('/start', (req, res) => {
-//   const publicKey = wallet.publicKey;
-//   let tran = {
-//     recipient: publicKey,
-//     cpu: 30,
-//     ram: 40,
-//     disk: 50
-//   }
-//   const transaction = wallet.createTransaction(recipient, cpu ,ram ,disk, bc, tp);
-//   p2pServer.broadcastTransaction(transaction);
-
-// });
-
 function checkpublickey() {
-  let url1 = `${NODE}/public-key`
+  let url1 = `${NODE2}/public-key`
   axios.get(url1)
     .then(response => {
       data = response.data;
@@ -114,9 +86,6 @@ function sendInfo() {
   axios.get(url)
     .then(response => {
       data = response.data
-      // console.log(response.data);
-      // public_key=this.checkpublickey();
-      // console.log(public_key);
       let tran = {
         recipient: public_key,
         cpu: data.CPU,
@@ -135,12 +104,11 @@ function sendInfo() {
 
 }
 checkpublickey();
-setInterval(checkNewTrans, 2000);
-setInterval(sendInfo, 10000);
+setInterval(checkNewTrans, 15000);
+setInterval(sendInfo, 30000);
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));
 try {
   p2pServer.listen();
-
-} catch (error) {
-  console.log("Listen:", + error)
+  } catch (error) {
+  p2pServer.listen();
 }

@@ -5,6 +5,7 @@ const { INITIAL_BALANCE } = require('../config');
 class Wallet {
   constructor() {
     this.keyPair = ChainUtil.genKeyPair();
+    // console.log(this.keyPair);
     this.publicKey = this.keyPair.getPublic().encode('hex');
   }
 
