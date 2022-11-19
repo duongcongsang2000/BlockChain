@@ -38,10 +38,7 @@ class P2pServer {
       // setTimeout(this.connectToPeers(), 5000);
       // console.log(`Listening for peer-to-peer connections on: ${P2P_PORT}`);
     }
-     
-    
   }
-
   connectToPeers() {
       peers.forEach(peer => {
         const socket = new Websocket(peer);
@@ -66,7 +63,7 @@ class P2pServer {
   connectSocket(socket) {
     try {
       this.sockets.push(socket);
-      console.log('length socket                   '+ this.sockets.length);
+      console.log('length socket '+ this.sockets.length);
       console.log('Socket connected');
       this.messageHandler(socket);
       this.sendChain(socket);

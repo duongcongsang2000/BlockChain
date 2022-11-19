@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('../blockchain');
-const P2pServer = require('./p2p-server2');
+const P2pServer = require('./p2p-server');
 // const P2pServer2 = require('./p2p-server2');
 const Wallet = require('../wallet');
 const TransactionPool = require('../wallet/transaction-pool');
@@ -70,6 +70,7 @@ function checkpublickey() {
 }
 
 function checkNewTrans() {
+  // p2pServer.updatesockets();
   if (tp.transactions.length !== 0) {
     let temp = tp.transactions;
     if (temp[0].input.address !== wallet.publicKey) {
@@ -81,7 +82,6 @@ function checkNewTrans() {
 }
 
 function sendInfo() {
-
   let url = `${NODE}/info/get`
   axios.get(url)
     .then(response => {
@@ -101,7 +101,6 @@ function sendInfo() {
       console.log(error);
 
     });
-
 }
 checkpublickey();
 setInterval(checkNewTrans, 15000);
